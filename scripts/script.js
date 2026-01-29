@@ -1,18 +1,26 @@
-import { showTabpanel, hideTabpanel } from "./helper.js";
+import {
+  showTabpanel,
+  hideTabpanel,
+  previousPeriod,
+  bgColors,
+} from "./helper.js";
+import { fetchData } from "./data.js";
 
 let appData = null;
 
 const tabBtns = Array.from(document.querySelectorAll("button[role=tab]"));
-console.log(tabBtns);
+const panels = document.querySelectorAll("dl[role='tabpanel']");
 
 tabBtns.forEach((tabBtn) => {
   tabBtn.addEventListener("click", function () {
-    const panels = document.querySelectorAll("dl[role='tabpanel']");
     panels.forEach((panel) => {
       const selectedPanel = panel.id === tabBtn.getAttribute("aria-controls");
       selectedPanel ? showTabpanel(panel) : hideTabpanel(panel);
       if (selectedPanel) {
         const panelData = panel.dataset.panel;
+        const url = new URL(window.location.href);
+        url.searchParams.set("panel", panelData);
+        history.pushState({}, "", url);
         renderData(appData, panelData);
       }
     });
@@ -24,21 +32,11 @@ tabBtns.forEach((tabBtn) => {
   });
 });
 
-async function fetchData() {
-  const res = await fetch("data.json");
-  if (!res.ok) throw new Error("error don sele");
-  const data = await res.json();
-
-  return data;
-}
-
 async function init() {
   try {
     const data = await fetchData();
     appData = data;
-    const panel = null;
-    renderData(data, panel);
-    console.log(data);
+    onInitialPageLoad();
   } catch (error) {
     console.error(error, error.message);
   }
@@ -46,21 +44,39 @@ async function init() {
 
 init();
 
+function onInitialPageLoad() {
+  const url = new URL(window.location.href);
+  const panel = url.searchParams.get("panel") || "daily";
+
+  renderOnPageLoadOrPopstate(appData, panel);
+}
+
+function renderOnPageLoadOrPopstate(appData, panel) {
+  renderData(appData, panel);
+
+  panels.forEach((p) => {
+    p.dataset.panel === panel ? showTabpanel(p) : hideTabpanel(p);
+  });
+
+  tabBtns.forEach((btn) => {
+    const selBtn = btn.id === `${panel}-tab` ? true : false;
+    btn.setAttribute("aria-selected", String(selBtn));
+  });
+}
+
 function renderData(data, panel) {
   if (!panel) return;
-  console.log(data, panel);
-  console.log(data.filter((d) => d.timeframes[panel]));
 
   const dlContainer = document.querySelector(`dl[data-panel='${panel}']`);
-  console.log(dlContainer);
 
-  const html = data.map((d) => {
-    return `
+  const html = data
+    .map((d) => {
+      return `
             <div
-              class="rounded-2xl bg-work relative pt-8 cursor-pointer hover:opacity-80"
+              class="rounded-2xl ${bgColors[d.title]} relative pt-8 cursor-pointer hover:opacity-80"
             >
               <img
-                src="./images/icon-${d.title.toLowerCase()}.svg"
+                src="./images/icon-${d.title.trim().toLowerCase().replaceAll(" ", "")}.svg"
                 alt=""
                 class="absolute top-0 right-0 z-10"
               />
@@ -76,13 +92,23 @@ function renderData(data, panel) {
                 </div>
 
                 <div
-                  class="mt-4 flex items-center justify-between gap-4 lg:flex-col lg:items-start"
+                  class="mt-6 flex items-center justify-between gap-4 lg:flex-col lg:items-start"
                 >
-                  <dd class="text-3xl lg:text-4xl font-bold">${d.timeframes[panel]}hrs</dd>
-                  <p>Yesterday - ${d.timeframes[panel]}hrs</p>
+                  <dd class="text-3xl lg:text-4xl font-bold">${d.timeframes[panel].current}hrs</dd>
+                  <p>${previousPeriod[panel]} - ${d.timeframes[panel].previous}hrs</p>
                 </div>
               </div>
             </div>
     `;
-  });
+    })
+    .join("");
+
+  dlContainer.innerHTML = html;
 }
+
+window.addEventListener("popstate", function () {
+  const url = new URL(window.location.href);
+  const urlPanel = url.searchParams.get("panel") || "daily";
+
+  renderOnPageLoadOrPopstate(appData, urlPanel);
+});

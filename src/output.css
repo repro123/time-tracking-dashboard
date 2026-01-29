@@ -29,6 +29,11 @@
     --font-rubik: "Rubik", sans-serif;
     --color-primary: hsl(246, 80%, 60%);
     --color-work: hsl(15, 100%, 70%);
+    --color-play: hsl(195, 74%, 62%);
+    --color-study: hsl(348, 100%, 68%);
+    --color-exercise: hsl(145, 58%, 55%);
+    --color-social: hsl(264, 64%, 52%);
+    --color-self-care: hsl(43, 84%, 65%);
     --color-page-bg: hsl(226, 43%, 10%);
     --color-card-bg: hsl(235, 46%, 20%);
     --color-text: hsl(236, 100%, 87%);
@@ -227,15 +232,6 @@
   .mt-auto {
     margin-top: auto;
   }
-  .-mb-4 {
-    margin-bottom: calc(var(--spacing) * -4);
-  }
-  .-mb-6 {
-    margin-bottom: calc(var(--spacing) * -6);
-  }
-  .mb-4 {
-    margin-bottom: calc(var(--spacing) * 4);
-  }
   .contents {
     display: contents;
   }
@@ -265,32 +261,17 @@
   .w-full {
     width: 100%;
   }
-  .max-w-5xl {
-    max-width: var(--container-5xl);
-  }
   .max-w-7xl {
     max-width: var(--container-7xl);
   }
   .max-w-full {
     max-width: 100%;
   }
-  .flex-grow {
-    flex-grow: 1;
-  }
   .grow {
     flex-grow: 1;
   }
-  .border-collapse {
-    border-collapse: collapse;
-  }
   .cursor-pointer {
     cursor: pointer;
-  }
-  .cursor-progress {
-    cursor: progress;
-  }
-  .resize {
-    resize: both;
   }
   .grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -304,9 +285,6 @@
   .items-center {
     align-items: center;
   }
-  .justify-baseline {
-    justify-content: baseline;
-  }
   .justify-between {
     justify-content: space-between;
   }
@@ -319,9 +297,6 @@
   .gap-6 {
     gap: calc(var(--spacing) * 6);
   }
-  .overflow-hidden {
-    overflow: hidden;
-  }
   .rounded-2xl {
     border-radius: var(--radius-2xl);
   }
@@ -331,17 +306,9 @@
   .rounded-md {
     border-radius: var(--radius-md);
   }
-  .rounded-t-2xl {
-    border-top-left-radius: var(--radius-2xl);
-    border-top-right-radius: var(--radius-2xl);
-  }
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;
-  }
-  .border-2 {
-    border-style: var(--tw-border-style);
-    border-width: 2px;
   }
   .border-4 {
     border-style: var(--tw-border-style);
@@ -356,11 +323,26 @@
   .bg-card-bg {
     background-color: var(--color-card-bg);
   }
+  .bg-exercise {
+    background-color: var(--color-exercise);
+  }
   .bg-page-bg {
     background-color: var(--color-page-bg);
   }
+  .bg-play {
+    background-color: var(--color-play);
+  }
   .bg-primary {
     background-color: var(--color-primary);
+  }
+  .bg-self-care {
+    background-color: var(--color-self-care);
+  }
+  .bg-social {
+    background-color: var(--color-social);
+  }
+  .bg-study {
+    background-color: var(--color-study);
   }
   .bg-work {
     background-color: var(--color-work);
@@ -377,9 +359,6 @@
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
   }
-  .py-3 {
-    padding-block: calc(var(--spacing) * 3);
-  }
   .pt-6 {
     padding-top: calc(var(--spacing) * 6);
   }
@@ -391,10 +370,6 @@
   }
   .font-rubik {
     font-family: var(--font-rubik);
-  }
-  .text-2xl {
-    font-size: var(--text-2xl);
-    line-height: var(--tw-leading, var(--text-2xl--line-height));
   }
   .text-3xl {
     font-size: var(--text-3xl);
@@ -417,9 +392,6 @@
   .text-work {
     color: var(--color-work);
   }
-  .underline {
-    text-decoration-line: underline;
-  }
   .antialiased {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -435,12 +407,6 @@
   .\*\:cursor-pointer {
     :is(& > *) {
       cursor: pointer;
-    }
-  }
-  .\*\:border {
-    :is(& > *) {
-      border-style: var(--tw-border-style);
-      border-width: 1px;
     }
   }
   .\*\:text-center {
@@ -462,33 +428,9 @@
       }
     }
   }
-  .\*\:hover\:border-work {
-    :is(& > *) {
-      &:hover {
-        @media (hover: hover) {
-          border-color: var(--color-work);
-        }
-      }
-    }
-  }
-  .aria-selected\:border-primary {
-    &[aria-selected="true"] {
-      border-color: var(--color-primary);
-    }
-  }
   .aria-selected\:border-white {
     &[aria-selected="true"] {
       border-color: var(--color-white);
-    }
-  }
-  .aria-selected\:border-work {
-    &[aria-selected="true"] {
-      border-color: var(--color-work);
-    }
-  }
-  .aria-selected\:border-t-white {
-    &[aria-selected="true"] {
-      border-top-color: var(--color-white);
     }
   }
   .aria-selected\:bg-page-bg {
@@ -496,40 +438,14 @@
       background-color: var(--color-page-bg);
     }
   }
-  .aria-selected\:pt-0 {
-    &[aria-selected="true"] {
-      padding-top: calc(var(--spacing) * 0);
-    }
-  }
-  .aria-selected\:pb-0 {
-    &[aria-selected="true"] {
-      padding-bottom: calc(var(--spacing) * 0);
-    }
-  }
-  .sm\:grid-cols-2 {
-    @media (width >= 40rem) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
   .md\:grid-cols-2 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-  .md\:grid-cols-\[auto_1fr\] {
-    @media (width >= 48rem) {
-      grid-template-columns: auto 1fr;
-    }
-  }
   .lg\:flex {
     @media (width >= 64rem) {
       display: flex;
-    }
-  }
-  .lg\:size-20 {
-    @media (width >= 64rem) {
-      width: calc(var(--spacing) * 20);
-      height: calc(var(--spacing) * 20);
     }
   }
   .lg\:size-24 {
@@ -578,20 +494,9 @@
       padding-right: calc(var(--spacing) * 20);
     }
   }
-  .lg\:pb-16 {
-    @media (width >= 64rem) {
-      padding-bottom: calc(var(--spacing) * 16);
-    }
-  }
   .lg\:pb-20 {
     @media (width >= 64rem) {
       padding-bottom: calc(var(--spacing) * 20);
-    }
-  }
-  .lg\:text-2xl {
-    @media (width >= 64rem) {
-      font-size: var(--text-2xl);
-      line-height: var(--tw-leading, var(--text-2xl--line-height));
     }
   }
   .lg\:text-3xl {
@@ -604,19 +509,6 @@
     @media (width >= 64rem) {
       font-size: var(--text-4xl);
       line-height: var(--tw-leading, var(--text-4xl--line-height));
-    }
-  }
-  .lg\:text-xl {
-    @media (width >= 64rem) {
-      font-size: var(--text-xl);
-      line-height: var(--tw-leading, var(--text-xl--line-height));
-    }
-  }
-  .lg\:\*\:text-left {
-    @media (width >= 64rem) {
-      :is(& > *) {
-        text-align: left;
-      }
     }
   }
 }
