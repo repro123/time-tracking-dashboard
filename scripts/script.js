@@ -86,7 +86,7 @@ function renderData(data, panel) {
 
   const html = data
     .map((d) => {
-      return `<li class="panel hover:scale-95 transition-transform duration-1000 border-2 border-transparent focus-within:border-white relative rounded-2xl ${bgColors[d.title]}" id="${d.title.toLowerCase().replaceAll(" ", "-")}">
+      return `<li class="panel hover:scale-95 transition-transform duration-500 border-2 border-transparent focus-within:border-white relative rounded-2xl ${bgColors[d.title]}" id="${d.title.toLowerCase().replaceAll(" ", "-")}">
               <img
                 src="./images/icon-${d.title.trim().toLowerCase().replaceAll(" ", "")}.svg"
                 alt=""
