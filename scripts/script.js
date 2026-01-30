@@ -9,7 +9,18 @@ import { fetchData } from "./data.js";
 let appData = null;
 
 const tabBtns = Array.from(document.querySelectorAll("button[role=tab]"));
-const panels = document.querySelectorAll("dl[role='tabpanel']");
+const panels = document.querySelectorAll("ul[role='tabpanel']");
+const loader = document.getElementById("loader");
+
+function toggleLoader(show) {
+  if (show) {
+    loader.classList.remove("hidden");
+    loader.classList.add("grid");
+  } else {
+    loader.classList.add("hidden");
+    loader.classList.remove("grid");
+  }
+}
 
 tabBtns.forEach((tabBtn) => {
   tabBtn.addEventListener("click", function () {
@@ -33,12 +44,16 @@ tabBtns.forEach((tabBtn) => {
 });
 
 async function init() {
+  toggleLoader(true);
   try {
     const data = await fetchData();
     appData = data;
+
     onInitialPageLoad();
   } catch (error) {
     console.error(error, error.message);
+  } finally {
+    toggleLoader(false);
   }
 }
 
@@ -67,12 +82,14 @@ function renderOnPageLoadOrPopstate(appData, panel) {
 function renderData(data, panel) {
   if (!panel) return;
 
-  const dlContainer = document.querySelector(`dl[data-panel='${panel}']`);
+  const dlContainer = document.querySelector(`ul[data-panel='${panel}']`);
 
   const html = data
     .map((d) => {
-      return `
-            <div
+      return `<li>
+            <article aria-labelledby="${d.title
+              .toLowerCase()
+              .replaceAll(" ", "-")}"
               class="rounded-2xl ${bgColors[d.title]} relative pt-8 cursor-pointer hover:opacity-80"
             >
               <img
@@ -82,7 +99,8 @@ function renderData(data, panel) {
               />
               <div class="rounded-2xl bg-card-bg p-6 mt-6 relative z-20">
                 <div class="flex items-center justify-between">
-                  <dt>${d.title}</dt>
+                <h2>
+                  <a href="#" id="${d.title.toLowerCase().replaceAll(" ", "-")}" class="text-white hover:text-work">${d.title}</a></h2>
                   <button
                     aria-label="Expand details"
                     class="border border-transparent cursor-pointer hover:border-work rounded-full size-8 grid place-items-center relative z-30"
@@ -94,11 +112,11 @@ function renderData(data, panel) {
                 <div
                   class="mt-6 flex items-center justify-between gap-4 lg:flex-col lg:items-start"
                 >
-                  <dd class="text-3xl lg:text-4xl font-bold">${d.timeframes[panel].current}hrs</dd>
+                  <p class="text-3xl lg:text-4xl font-bold">${d.timeframes[panel].current}hrs</p>
                   <p>${previousPeriod[panel]} - ${d.timeframes[panel].previous}hrs</p>
                 </div>
               </div>
-            </div>
+            </article></li>
     `;
     })
     .join("");
