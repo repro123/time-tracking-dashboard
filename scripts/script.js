@@ -86,21 +86,22 @@ function renderData(data, panel) {
 
   const html = data
     .map((d) => {
-      return `<li>
-            <article aria-labelledby="${d.title
-              .toLowerCase()
-              .replaceAll(" ", "-")}"
-              class="rounded-2xl ${bgColors[d.title]} relative pt-8 cursor-pointer hover:opacity-80"
-            >
+      return `<li class="panel hover:scale-95 transition-transform duration-1000 border-2 border-transparent focus-within:border-white relative rounded-2xl ${bgColors[d.title]}" id="${d.title.toLowerCase().replaceAll(" ", "-")}">
               <img
                 src="./images/icon-${d.title.trim().toLowerCase().replaceAll(" ", "")}.svg"
                 alt=""
-                class="absolute top-0 right-0 z-10"
+                class="absolute top-0 right-0 "
               />
-              <div class="rounded-2xl bg-card-bg p-6 mt-6 relative z-20">
+            <article aria-labelledby="${d.title
+              .toLowerCase()
+              .replaceAll(" ", "-")}"
+              class="rounded-2xl relative pt-8 overflow-hidden"
+            >
+              
+              <div class="rounded-2xl bg-card-bg p-6 mt-6 ">
                 <div class="flex items-center justify-between">
                 <h2>
-                  <a href="#" id="${d.title.toLowerCase().replaceAll(" ", "-")}" class="text-white hover:text-work">${d.title}</a></h2>
+                  <a href="#" id="${d.title.toLowerCase().replaceAll(" ", "-")}" class="text-white hover:underline">${d.title}</a></h2>
                   <button
                     aria-label="Expand details"
                     class="border border-transparent cursor-pointer hover:border-work rounded-full size-8 grid place-items-center relative z-30"
@@ -122,6 +123,9 @@ function renderData(data, panel) {
     .join("");
 
   dlContainer.innerHTML = html;
+
+  const liPanel = Array.from(dlContainer.querySelectorAll(".panel"));
+  getEachPanel(liPanel);
 }
 
 window.addEventListener("popstate", function () {
@@ -130,3 +134,15 @@ window.addEventListener("popstate", function () {
 
   renderOnPageLoadOrPopstate(appData, urlPanel);
 });
+
+function getEachPanel(panel) {
+  panel.forEach((p) => {
+    p.style.cursor = "pointer";
+
+    p.addEventListener("click", function (e) {
+      const link = p.querySelector("a");
+      if (e.target.closest("button")) return;
+      window.location.href = link.href;
+    });
+  });
+}
